@@ -37,11 +37,11 @@ def main() -> None:
     hostname:        (str | None)  =  os.getenv("HOSTNAME")
 
     # Optional
-    send_to:         str  =  os.getenv("SEND_TO", default="3ds")
-    as_default:      (str | None)  =  os.getenv("AS_DEFAULT")
-    citra_sdmc_path: (str | None)  =  os.getenv("CITRA_SDMC_PATH")
+    send_to:         str = os.getenv("SEND_TO", default="3ds")
+    as_default:      str = os.getenv("AS_DEFAULT", default="false")
+    citra_sdmc_path: str = os.getenv("CITRA_SDMC_PATH", default="")
 
-    if (any([not i for i in (plugin_name, title_id, hostname, send_to)])):
+    if (any([i is None for i in (plugin_name, title_id, hostname)])):
         print("Error: .env file not found or invalid.")
         sys.exit(1)
 

@@ -53,7 +53,7 @@ def main() -> None:
     port: int               = 5000
     timeout:int             = 500
 
-    if (send_to == "3ds" or send_to == "both"):
+    if (send_to in ("3ds", "both")):
         print(f"\n[3ds] Trying to upload {plugin_name} to {hostname + ':' + str(port) + dst_path[5:]}")
         is_upload_successful: bool = ftp_upload(hostname, port, plugin_name, "STOR " + dst_path, timeout)
         print("[3ds] Successfully uploaded!" if is_upload_successful else "[3ds] Upload failed...")
@@ -63,7 +63,7 @@ def main() -> None:
             is_upload_successful: bool = ftp_upload(hostname, port, plugin_name, "STOR /luma/plugins/default.3gx", timeout)
             print("[3ds] Successfully uploaded!" if is_upload_successful else "[3ds] Upload failed...")
 
-    if (send_to == "citra" or send_to == "both"):
+    if (send_to in ("citra", "both")):
         print(f"\n[Citra] Trying to copy {plugin_name} to {citra_sdmc_path + dst_path}")
 
         try:

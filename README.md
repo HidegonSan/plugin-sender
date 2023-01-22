@@ -1,5 +1,6 @@
 # plugin-sender
-Tools for sending plugins
+Tools for sending plugins  
+Easily send plugins to 3ds and Citra!
 
 # Usage
 ```bash

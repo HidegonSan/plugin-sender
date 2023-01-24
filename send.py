@@ -32,9 +32,9 @@ def main() -> None:
     dotenv.load_dotenv()
 
     # Required
-    plugin_name:     (str | None)  =  os.getenv("PLUGIN_NAME")
-    title_id:        (str | None)  =  os.getenv("TITLE_ID")
-    hostname:        (str | None)  =  os.getenv("HOSTNAME")
+    plugin_name:     (str | None) = os.getenv("PLUGIN_NAME")
+    title_id:        (str | None) = os.getenv("TITLE_ID")
+    hostname:        (str | None) = os.getenv("HOSTNAME")
 
     # Optional
     send_to:         str = os.getenv("SEND_TO", default="3ds")
@@ -48,9 +48,9 @@ def main() -> None:
     send_to                 = send_to.casefold()
     plugin_name             = plugin_name[2:] if plugin_name.startswith("./") else plugin_name
     citra_sdmc_path         = citra_sdmc_path[:-1] if citra_sdmc_path.endswith("/") else citra_sdmc_path
-    dst_path: str           = f"/luma/plugins/{title_id}/{plugin_name}"
-    port: int               = 5000
-    timeout:int             = 500
+    dst_path:           str = f"/luma/plugins/{title_id}/{plugin_name}"
+    port:               int = 5000
+    timeout:            int = 500
 
     if (send_to in ("3ds", "both")):
         print(f"\n[3ds Title] Trying to upload {plugin_name} to {hostname + ':' + str(port) + dst_path[5:]}")
@@ -59,7 +59,7 @@ def main() -> None:
 
         if (as_default.casefold() == "true"):
             print(f"\n[3ds Default] Trying to upload {plugin_name} to {hostname + ':' + str(port) + '/luma/plugins/default.3gx'}")
-            is_upload_successful: bool = ftp_upload(hostname, port, plugin_name, "STOR /luma/plugins/default.3gx", timeout)
+            is_upload_successful = ftp_upload(hostname, port, plugin_name, "STOR /luma/plugins/default.3gx", timeout)
             print("[3ds Default] Successfully uploaded!" if is_upload_successful else "[3ds Default] Upload failed...")
 
     if (send_to in ("citra", "both")):

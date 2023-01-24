@@ -31,18 +31,17 @@ def ftp_upload(hostname: str, port: int, upload_src_path: str, upload_dst_path: 
 def main() -> None:
     dotenv.load_dotenv()
 
-    try:
-        send_to:         (str | None)  =  os.getenv("SEND_TO")
-        as_default:      (str | None)  =  os.getenv("AS_DEFAULT")
-        plugin_name:     (str | None)  =  os.getenv("PLUGIN_NAME")
-        title_id:        (str | None)  =  os.getenv("TITLE_ID")
-        hostname:        (str | None)  =  os.getenv("HOSTNAME")
-        citra_sdmc_path: (str | None)  =  os.getenv("CITRA_SDMC_PATH")
+    # Required
+    plugin_name:     (str | None)  =  os.getenv("PLUGIN_NAME")
+    title_id:        (str | None)  =  os.getenv("TITLE_ID")
+    hostname:        (str | None)  =  os.getenv("HOSTNAME")
 
-        if (any([i is None for i in (send_to, as_default, plugin_name, title_id, hostname, citra_sdmc_path)])):
-            raise ValueError("Property is None")
+    # Optional
+    send_to:         str = os.getenv("SEND_TO", default="3ds")
+    as_default:      str = os.getenv("AS_DEFAULT", default="false")
+    citra_sdmc_path: str = os.getenv("CITRA_SDMC_PATH", default="")
 
-    except Exception:
+    if (any([i is None for i in (plugin_name, title_id, hostname)])):
         print("Error: .env file not found or invalid.")
         sys.exit(1)
 
@@ -90,21 +89,21 @@ if __name__ == "__main__":
 """
 # .env example
 
-# Send type: 3ds, citra, both
-SEND_TO=both
-
-# Send plugin as default.3gx
-AS_DEFAULT=true
-
 # Plugin file name to send
-PLUGIN_NAME=./EasyCTRPF.3gx
+PLUGIN_NAME=CTRPF.3gx
 
 # Target title id
 TITLE_ID=0004000000155100
 
 # 3ds hostname
-HOSTNAME=192.168.2.100
+HOSTNAME=192.168.2.123
 
-# sdmc path of citra
+# Send type (Optional): 3ds(default), citra, both
+SEND_TO=3ds
+
+# Send plugin as default.3gx (Optional): true, false(default)
+AS_DEFAULT=false
+
+# sdmc path of citra (Optional)
 CITRA_SDMC_PATH=/home/user/.var/app/org.citra_emu.citra/data/citra-emu/sdmc/
 """

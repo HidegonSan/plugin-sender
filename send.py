@@ -53,7 +53,7 @@ def main() -> None:
     timeout:            int = 500
 
     if (send_to in ("3ds", "both")):
-        print(f"\n[3ds Title] Trying to upload {plugin_name} to {hostname + ':' + str(port) + dst_path[5:]}")
+        print(f"\n[3ds Title] Trying to upload {plugin_name} to {hostname + ':' + str(port) + dst_path}")
         is_upload_successful: bool = ftp_upload(hostname, port, plugin_name, "STOR " + dst_path, timeout)
         print("[3ds Title] Successfully uploaded!" if is_upload_successful else "[3ds Title] Upload failed...")
 

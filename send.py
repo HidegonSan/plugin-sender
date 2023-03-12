@@ -41,7 +41,7 @@ def main() -> None:
     as_default:      str = os.getenv("AS_DEFAULT", default="false")
     citra_sdmc_path: str = os.getenv("CITRA_SDMC_PATH", default="")
 
-    if (any([i is None for i in (plugin_name, title_id, hostname)])):
+    if any(i is None for i in (plugin_name, title_id, hostname)):
         print("Error: .env file not found or invalid.")
         sys.exit(1)
 
@@ -49,20 +49,26 @@ def main() -> None:
     plugin_name             = plugin_name[2:] if plugin_name.startswith("./") else plugin_name
     citra_sdmc_path         = citra_sdmc_path[:-1] if citra_sdmc_path.endswith("/") else citra_sdmc_path
     dst_path:           str = f"/luma/plugins/{title_id}/{plugin_name}"
-    port:               int = 5000
-    timeout:            int = 500
+    if send_to in {"3ds", "both"}:
+        port:               int = 5000
+        print(
+            f"\n[3ds Title] Trying to upload {plugin_name} to {hostname}:{port}{dst_path}"
+        )
+        timeout:            int = 500
 
-    if (send_to in ("3ds", "both")):
-        print(f"\n[3ds Title] Trying to upload {plugin_name} to {hostname + ':' + str(port) + dst_path}")
-        is_upload_successful: bool = ftp_upload(hostname, port, plugin_name, "STOR " + dst_path, timeout)
+        is_upload_successful: bool = ftp_upload(
+            hostname, port, plugin_name, f"STOR {dst_path}", timeout
+        )
         print("[3ds Title] Successfully uploaded!" if is_upload_successful else "[3ds Title] Upload failed...")
 
         if (as_default.casefold() == "true"):
-            print(f"\n[3ds Default] Trying to upload {plugin_name} to {hostname + ':' + str(port) + '/luma/plugins/default.3gx'}")
+            print(
+                f"\n[3ds Default] Trying to upload {plugin_name} to {hostname}:{port}/luma/plugins/default.3gx"
+            )
             is_upload_successful = ftp_upload(hostname, port, plugin_name, "STOR /luma/plugins/default.3gx", timeout)
             print("[3ds Default] Successfully uploaded!" if is_upload_successful else "[3ds Default] Upload failed...")
 
-    if (send_to in ("citra", "both")):
+    if send_to in {"citra", "both"}:
         print(f"\n[Citra Title] Trying to copy {plugin_name} to {citra_sdmc_path + dst_path}")
 
         try:
@@ -72,10 +78,12 @@ def main() -> None:
             print("[Citra Title] Copy failed...")
 
         if (as_default.casefold() == "true"):
-            print(f"\n[Citra Default] Trying to copy {plugin_name} to {citra_sdmc_path + '/luma/plugins/default.3gx'}")
+            print(
+                f"\n[Citra Default] Trying to copy {plugin_name} to {citra_sdmc_path}/luma/plugins/default.3gx"
+            )
 
             try:
-                shutil.copyfile(plugin_name, citra_sdmc_path + "/luma/plugins/default.3gx")
+                shutil.copyfile(plugin_name, f"{citra_sdmc_path}/luma/plugins/default.3gx")
                 print("[Citra Default] Successfully copied!")
             except Exception:
                 print("[Citra Default] Copy failed...")
